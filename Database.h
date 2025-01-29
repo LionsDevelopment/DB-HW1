@@ -12,7 +12,10 @@ class Database
     private:
         //Private Variables
         fstream Datainout;
+        string *dataFilePtr;
         int num_records;
+        int record_size;
+        bool openFlag;
 
         //Private methods
         int getRecord(string &collegeId, string &state, string &city, string &name);
@@ -38,7 +41,7 @@ class Database
 
         void close();
 
-        int readRecord(string recordNum);
+        int readRecord(const int recordNum);
 
         bool find(string collegeId, string &recordNum, string &state, string &city, string &name);
 
