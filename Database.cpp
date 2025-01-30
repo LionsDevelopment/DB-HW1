@@ -14,10 +14,9 @@ using namespace std;
 Database::Database()
 {
     num_records = 0;
-    record_size = 0;
+    record_size = 76;
     dataFilePtr = NULL;
     openFlag = false;
-
 }
 
 Database::~Database(){}
@@ -25,24 +24,21 @@ Database::~Database(){}
 
 //Private methods
 
-//Need to double check, does not work 100% properly
 int Database::getRecord(string &collegeId, string &state, string &city, string &name)
 {
     int result = -1;
     string temp_record;
     streampos position = Datainout.tellg();
-    getline(Datainout, temp_record);
 
-    stringstream stream(temp_record);
-    vector<string> recordInfo;
-
-
-    if(!temp_record.empty()){
+    if(temp_record.empty()){
         Datainout.seekg(position, ios::beg);
-        Datainout >> collegeId >> state >> city >> name;
+        getline(Datainout, collegeId, ',');
+        getline(Datainout, state, ',');
+        getline(Datainout, city, ',');
+        getline(Datainout, name, '\n');
         result = 1;
     }
-    else if(!temp_record.empty()){
+    else {
         collegeId = "";
         state = "";
         city = "";
@@ -62,12 +58,12 @@ bool Database::writeRecord(fstream &Data_out, string collegeId, string state, st
         string truncateCollegeId = collegeId.substr(0,6);
         string truncateState = state.substr(0,14);
         string truncateCity = city.substr(0,16);
-        string truncateName = name.substr(0,32);
+        string truncateName = name.substr(0,36);
 
         Data_out << setw(6) << left << truncateCollegeId << ","
             << setw(14) << left << truncateState << ","
             << setw(16) << left << truncateCity << ","
-            << setw(32) << left << truncateName
+            << setw(36) << left << truncateName
             << endl;
 
         return true;
@@ -77,53 +73,65 @@ bool Database::writeRecord(fstream &Data_out, string collegeId, string state, st
 bool Database::overwriteRecord(string collegeId, string state, string city, string name)
 {
     return false;
-    
 }
 
 bool Database::binarySearch(string collegeId, string &recordNum, string &state, string &city, string &name)
 {
     return false;
-    
 }
 
 bool Database::linearSearch(string collegeId, string &recordNum, string &state, string &city, string &name)
 {
     return false;
-    
 }
 
 
 //Public methods
 void Database::open(string filename)
 {
-    //balls 
-    
-
     // Open file in read/write mode
-    Datainout.open(filename.c_str(), fstream::in | fstream::out);
+    ifstream configInfo;
+    string numRecords, recordSize;
+    configInfo.open((filename.substr(0, filename.length() - 5))+".config");
+    getline(configInfo, numRecords, ',');
+    getline(configInfo, recordSize, ' ');
 
+    num_records = stoi(numRecords);
+    record_size = stoi(recordSize);
+
+    Datainout.open(filename.c_str(), fstream::in | fstream::out);
+    if(Datainout.is_open())
+
+        cout << "Database Opened" << endl;
+    else    
+        cout << "Database Failed to Open" << endl;
+
+    readRecord(1);
 }
 
 void Database::close()
 {
     num_records = 0;
-    record_size = 0;
     Datainout.close();
+    if(!Datainout.is_open())
+        cout << "Database Closed" << endl;
+    else    
+        cout << "Database Failed to Close" << endl;
 }
 
-//Erm proably also doesn't work, not to sure about the assigning of the string values and calling the get record.
 int Database::readRecord(const int recordNum)
 {
     int result = -1;
     string collegeId, state, city, name;
 
-    if((recordNum >= 0 ) && (recordNum <= num_records - 1)){
+    if((recordNum >= 0 ) && (recordNum <= num_records)){
         Datainout.seekg(recordNum * record_size);
         result = getRecord(collegeId, state, city, name);
+        cout << "Record " << recordNum << " found:" << collegeId << ", " << state << ", " << city << ", " << name << endl;
     }
     else
         cout << "Record" << recordNum << " can't seem to be found" << endl;
-    
+
     return result;
 }
 
@@ -138,7 +146,6 @@ void Database::createDB(string filename){
     string city = "city";
     string name = "name";
     int found_records = 0; 
-    int found_record_size = 0;
     
     Data_in.open(filename+".csv");
     Data_out.open(filename+".data", fstream::out);
@@ -159,7 +166,7 @@ void Database::createDB(string filename){
     Data_in.close();
     Data_out.close();
     Config_out.open(filename+".config", fstream::out);
-    Config_out << found_records << "," << 80;
+    Config_out << found_records << "," << record_size;
 
 }
 
