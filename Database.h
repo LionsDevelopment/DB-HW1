@@ -20,7 +20,7 @@ class Database
         //Private methods
         int getRecord(string &collegeId, string &state, string &city, string &name);
 
-        bool writeRecord(string collegeId, string state, string city, string name);
+        bool writeRecord(fstream &Data_out, string collegeId, string state, string city, string name);
 
         bool overwriteRecord(string collegeId, string state, string city, string name);
 
@@ -30,8 +30,8 @@ class Database
     
     public:
         //Private Variables
-        const static int recordSize = 100;
-        const static int numRecords = 100;
+        // const static int recordSize = 100;
+        // const static int numRecords = 100;
 
         //Public methods
         Database();
@@ -48,5 +48,7 @@ class Database
         bool deleteRecord(string collegeId);
 
         bool addRecord(string collegeID, string state, string city, string name);
+
+        void createDB(string filename);
 
 };

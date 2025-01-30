@@ -1,8 +1,10 @@
 #include <iostream>
+#include "Database.h"
 using namespace std;
 
 int main() {
     int choice;
+    Database DB;
 
     cout << "1) Create new database\n"
             << "2) Open database\n"
@@ -17,6 +19,7 @@ int main() {
     switch (choice) {
         case 1:
             cout << "Creating new database..." << endl;
+            DB.createDB("small-colleges");
             break;
         case 2:
             cout << "Opening database..." << endl;
