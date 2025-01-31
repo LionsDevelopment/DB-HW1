@@ -27,12 +27,12 @@ Database::~Database(){}
 int Database::getRecord(string &collegeId, string &state, string &city, string &name)
 {
     int result = -1;
-    string temp_record;
-    streampos position = Datainout.tellg();
 
-    if(temp_record.empty()){
-        Datainout.seekg(position, ios::beg);
-        getline(Datainout, collegeId, ',');
+    if(Datainout.peek() == '\n')
+        Datainout.get();
+    getline(Datainout, collegeId, ',');
+
+    if(!collegeId.empty()){
         getline(Datainout, state, ',');
         getline(Datainout, city, ',');
         getline(Datainout, name, '\n');
@@ -106,7 +106,6 @@ void Database::open(string filename)
     else    
         cout << "Database Failed to Open" << endl;
 
-    readRecord(1);
 }
 
 void Database::close()
@@ -126,8 +125,10 @@ int Database::readRecord(const int recordNum)
 
     if((recordNum >= 0 ) && (recordNum <= num_records)){
         Datainout.seekg(recordNum * record_size);
+        streampos position = Datainout.tellg();
         result = getRecord(collegeId, state, city, name);
-        cout << "Record " << recordNum << " found:" << collegeId << ", " << state << ", " << city << ", " << name << endl;
+        Datainout.seekg(position, ios::beg);
+        cout << "Record " << recordNum << " found: " << collegeId << ", " << state << ", " << city << ", " << name << endl;
     }
     else
         cout << "Record" << recordNum << " can't seem to be found" << endl;
