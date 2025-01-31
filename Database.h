@@ -51,4 +51,6 @@ class Database
 
         void createDB(string filename);
 
+        bool testDB();
+
 };

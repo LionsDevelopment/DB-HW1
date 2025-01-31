@@ -187,3 +187,28 @@ bool Database::addRecord(string collegeID, string state, string city, string nam
     return false;
 }
 
+bool Database::testDB()
+{
+    // It should create the pair of files from the input file by calling "createDB" followed by "open".
+    //Then, call readRecord on record 0, record 14, record 6, record -1, and record 1000
+    // and print their contents (or an error message) to the screen;
+    try {
+        cout << "Creating database...." << endl;
+        createDB("small-colleges");
+        cout << "Opening database...." << endl;
+        open("small-colleges.data");
+
+        readRecord(0);
+        readRecord(14);
+        readRecord(6);
+        readRecord(-1);
+        readRecord(1000);
+
+        cout << "Closing database...." << endl;
+        close();
+        return true;
+    } catch (const exception &e) {
+        cerr << "An error occurred: " << e.what() << endl;
+        return false;
+    }
+}

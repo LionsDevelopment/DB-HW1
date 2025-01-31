@@ -14,7 +14,8 @@ int main() {
             << "6) Create report\n"
             << "7) Add record\n"
             << "8) Delete record\n"
-            << "9) Quit" << endl;
+            << "9) Quit\n"
+            << "0) Test database" << endl;
     cin >> choice;
     while(!cin.fail())
     {
@@ -48,7 +49,11 @@ int main() {
                 break;
             case 9:
                 cout << "Quitting..." << endl;
-                    exit(0);
+                exit(0);
+                break;
+            case 0:
+                cout << "Testing database..." << endl;
+                DB.testDB();
                 break;
             default:
                 cout << "Invalid choice. Please enter a number between 1 and 9." << endl;
@@ -62,7 +67,8 @@ int main() {
             << "6) Create report\n"
             << "7) Add record\n"
             << "8) Delete record\n"
-            << "9) Quit" << endl;
+            << "9) Quit\n"
+            << "0) Test database" << endl;
         cin >> choice;
     }
     return 0;
