@@ -27,6 +27,8 @@ class Database
         bool binarySearch(string collegeId, string &recordNum, string &state, string &city, string &name);
 
         bool linearSearch(string collegeId, string &recordNum, string &state, string &city, string &name);
+
+        bool readCSV(ifstream &Data_in, fstream &sData_out, string &collegeId, string &state, string &city, string &name);
     
     public:
         //Private Variables
