@@ -249,14 +249,55 @@ void Database::createDB(string filename)
 
 bool Database::find(string collegeId, string &recordNum, string &state, string &city, string &name)
 {
-    return false;
+    bool successfulFind = false;
+    if(binarySearch(collegeId, recordNum, state, city, name))
+    {
+        if(!collegeId.empty() || collegeId != " ")
+        {
+            cout << "College Id: " << collegeId << " was found" << endl;
+            successfulFind = true;
+        }
+        else
+        {
+            cout << "Couldn't find college id: " << collegeId << endl;
+        }
+    }
+    else
+    {   
+        cout << " There was an issue. Couldn't find college id: " << collegeId << endl;
+        successfulFind = false;
+    }    
+    return successfulFind;
 }
 
 bool Database::deleteRecord(string collegeId)
 {
-    return false;
+    bool recordDeleted = false;
+    string recordNum, state, city, name;
+
+    if(find(collegeId, recordNum, state, city, name))
+    {
+        if(overwriteRecord(collegeId, " ", " ", " "))
+        {
+            cout << "Record " << recordNum << " was deleted" << endl;
+            recordDeleted = true;
+        }
+        else
+        {
+            cout << "Record " << recordNum << " couldn't be deleted" << endl;
+            recordDeleted = false;
+        }
+    }
+    else
+    {
+        cout << "Record could not be found" << endl;
+        recordDeleted = false;
+    }
+
+    return recordDeleted;
 }
 
+//Bonus
 bool Database::addRecord(string collegeID, string state, string city, string name)
 {
     return false;
