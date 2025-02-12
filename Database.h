@@ -1,7 +1,8 @@
 /*
-
+CSCE 45203: Database Management Systems HW#1
+Luke Lyons: 010936877
+Lizzie Howell: 011002727
 */
-
 #include <iostream>
 #include <fstream>
 
@@ -31,10 +32,6 @@ class Database
         bool readCSV(ifstream &Data_in, fstream &sData_out, string &collegeId, string &state, string &city, string &name);
     
     public:
-        //Private Variables
-        // const static int recordSize = 100;
-        // const static int numRecords = 100;
-
         //Public methods
         Database();
         ~Database();

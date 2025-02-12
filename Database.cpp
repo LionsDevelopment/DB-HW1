@@ -1,5 +1,7 @@
 /*
-
+CSCE 45203: Database Management Systems HW#1
+Luke Lyons: 010936877
+Lizzie Howell: 011002727
 */
 #include "Database.h"
 #include <iomanip>
@@ -59,12 +61,12 @@ bool Database::writeRecord(fstream &Data_out, string collegeId, string state, st
         string truncateCollegeId = collegeId.substr(0, 6);
         string truncateState = state.substr(0, 14);
         string truncateCity = city.substr(0, 16);
-        string truncateName = name.substr(0, 36);
+        string truncateName = name.substr(0, 40);
 
         Data_out << setw(6) << left << truncateCollegeId << ","
                  << setw(14) << left << truncateState << ","
                  << setw(16) << left << truncateCity << ","
-                 << setw(36) << left << truncateName
+                 << setw(40) << left << truncateName
                  << endl;
 
         return true;

@@ -1,9 +1,15 @@
+/*
+CSCE 45203: Database Management Systems HW#1
+Luke Lyons: 010936877
+Lizzie Howell: 011002727
+*/
 #include <iostream>
 #include "Database.h"
 using namespace std;
 
 int main() {
     int choice;
+    string filename;
     Database DB;
 
     cout << "1) Create new database\n"
@@ -15,22 +21,26 @@ int main() {
             << "7) Add record\n"
             << "8) Delete record\n"
             << "9) Quit\n"
-            << "0) Test database" << endl
+            << "10) Test database\n"
             << "11) Run linear search\n"
-            << "22) Run binary search\n";
+            << "12) Run binary search" << endl;
 
     cin >> choice;
     while(!cin.fail())
     {
         switch (choice) {
             case 1:
+                cout << "Please put filename:" << endl;
+                cin >> filename;
                 cout << "Creating new database..." << endl;
-                DB.createDB("small-colleges");
+                DB.createDB(filename);
                 break;
             case 2:
+                cout << "Please put filename:" << endl;
+                cin >> filename;
                 cout << "Opening database..." << endl;
-                DB.open("small-colleges.data");
-                break;
+                DB.open(filename+".data");
+            break;
             case 3:
                 cout << "Closing database..." << endl;
                 DB.close();
@@ -54,7 +64,7 @@ int main() {
                 cout << "Quitting..." << endl;
                 exit(0);
                 break;
-            case 0:
+            case 10:
                 cout << "Testing database..." << endl;
                 DB.testDB();
                 break;
@@ -63,7 +73,7 @@ int main() {
                 cout << "Running Linear Search..." << endl;
                 DB.runLinearSearch();
                 break;
-            case 22:
+            case 12:
                 cout << "Running Binary Search..." << endl;
                 DB.runBinarySearch();
                 break;
@@ -80,9 +90,9 @@ int main() {
             << "7) Add record\n"
             << "8) Delete record\n"
             << "9) Quit\n"
-            << "0) Test database" << endl
+            << "10) Test database\n"
             << "11) Run linear search\n"
-            << "22) Run binary search\n";
+            << "12) Run binary search" << endl;
         cin >> choice;
     }
     return 0;
