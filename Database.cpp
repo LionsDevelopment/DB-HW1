@@ -86,13 +86,84 @@ bool Database::overwriteRecord(string collegeId, string state, string city, stri
     return false;
 }
 
+/*
+parameter(s): collegeId, &recordNum, &state, &name
+returns: Boolean, true if the collegeId was found, false if not
+purpose: if db open, it uses seeks to perform binary search on the sorted data file to locate the id.
+It fills in the parameters with the data (if found), otherwise it sets them to default values.
+*/
 bool Database::binarySearch(string collegeId, string &recordNum, string &state, string &city, string &name)
 {
+    if (Datainout.is_open())
+    {
+        cout << "Binary Search" << endl;
+        int low = 0;
+        int high = num_records - 1;
+        int mid;
+        string collegeIdMid;
+        string stateMid;
+        string cityMid;
+        string nameMid;
+
+        while (low <= high)
+        {
+            mid = (low + high) / 2;
+            // cout << "Low: " << low << " High: " << high << " Mid: " << mid << endl;
+            Datainout.seekg(mid * record_size);
+            getRecord(collegeIdMid, stateMid, cityMid, nameMid);
+            // cout << "CollegeIdMid: " << collegeIdMid << " CollegeId: " << collegeId << endl;
+            if (collegeIdMid == collegeId)
+            {
+                recordNum = to_string(mid);
+                state = stateMid;
+                city = cityMid;
+                name = nameMid;
+                return true;
+            }
+            else if (collegeIdMid < collegeId)
+            {
+                low = mid + 1;
+            }
+            else
+            {
+                high = mid - 1;
+            }
+        }
+    }
     return false;
 }
 
+/*
+** BONUS **
+parameter(s): collegeId, &recordNum, &state, &name
+returns: Boolean, true if the collegeId was found, false if not
+purpose: if db open, it reads records from the overflowFile sequentially.
+If the record is found, it fills in the parameters with the data (if found), otherwise it sets them to default values.
+*/
 bool Database::linearSearch(string collegeId, string &recordNum, string &state, string &city, string &name)
 {
+    string tempCollegeId;
+    string tempState;
+    string tempCity;
+    string tempName;
+
+    for (int i = 0; i < num_records; i++)
+    {
+        Datainout.seekg(i * record_size);
+        getRecord(tempCollegeId, tempState, tempCity, tempName);
+        if (tempCollegeId == collegeId)
+        {
+            recordNum = to_string(i);
+            state = tempState;
+            city = tempCity;
+            name = tempName;
+            return true;
+        }
+    }
+    recordNum = "";
+    state = "";
+    city = "";
+    name = "";
     return false;
 }
 
@@ -216,4 +287,56 @@ bool Database::testDB()
         cerr << "An error occurred: " << e.what() << endl;
         return false;
     }
+}
+
+bool Database::runLinearSearch()
+{
+    cout << "Creating database...." << endl;
+    createDB("small-colleges");
+    cout << "Opening database...." << endl;
+    open("small-colleges.data");
+
+    string collegeId, state, city, name;
+    string recordNum;
+    cout << "Enter collegeId to search for: ";
+    cin >> collegeId;
+
+    if (linearSearch(collegeId, recordNum, state, city, name))
+    {
+        cout << "Record found: " << collegeId << ", " << state << ", " << city << ", " << name << endl;
+    }
+    else
+    {
+        cout << "Record not found" << endl;
+    }
+
+    cout << "Closing database...." << endl;
+    close();
+    return true;
+}
+
+bool Database::runBinarySearch()
+{
+    cout << "Creating database...." << endl;
+    createDB("small-colleges");
+    cout << "Opening database...." << endl;
+    open("small-colleges.data");
+
+    string collegeId, state, city, name;
+    string recordNum;
+    cout << "Enter collegeId to search for: ";
+    cin >> collegeId;
+
+    if (binarySearch(collegeId, recordNum, state, city, name))
+    {
+        cout << "Record found: " << collegeId << ", " << state << ", " << city << ", " << name << endl;
+    }
+    else
+    {
+        cout << "Record not found" << endl;
+    }
+
+    cout << "Closing database...." << endl;
+    close();
+    return true;
 }

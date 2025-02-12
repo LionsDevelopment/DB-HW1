@@ -55,4 +55,8 @@ class Database
 
         bool testDB();
 
+        bool runLinearSearch();
+
+        bool runBinarySearch();
+
 };

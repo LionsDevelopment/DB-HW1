@@ -15,7 +15,10 @@ int main() {
             << "7) Add record\n"
             << "8) Delete record\n"
             << "9) Quit\n"
-            << "0) Test database" << endl;
+            << "0) Test database" << endl
+            << "11) Run linear search\n"
+            << "22) Run binary search\n";
+
     cin >> choice;
     while(!cin.fail())
     {
@@ -55,6 +58,15 @@ int main() {
                 cout << "Testing database..." << endl;
                 DB.testDB();
                 break;
+            //For testing only, remove later :>
+            case 11:
+                cout << "Running Linear Search..." << endl;
+                DB.runLinearSearch();
+                break;
+            case 22:
+                cout << "Running Binary Search..." << endl;
+                DB.runBinarySearch();
+                break;
             default:
                 cout << "Invalid choice. Please enter a number between 1 and 9." << endl;
                 break;
@@ -68,7 +80,9 @@ int main() {
             << "7) Add record\n"
             << "8) Delete record\n"
             << "9) Quit\n"
-            << "0) Test database" << endl;
+            << "0) Test database" << endl
+            << "11) Run linear search\n"
+            << "22) Run binary search\n";
         cin >> choice;
     }
     return 0;
