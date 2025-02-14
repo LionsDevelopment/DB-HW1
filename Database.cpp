@@ -16,7 +16,7 @@ using namespace std;
 Database::Database()
 {
     num_records = 0;
-    record_size = 80;
+    record_size = 130;
     dataFilePtr = NULL;
     openFlag = false;
 }
@@ -61,13 +61,13 @@ bool Database::writeRecord(fstream &Data_out, string collegeId, string state, st
     {
         string truncateCollegeId = collegeId.substr(0, 6);
         string truncateState = state.substr(0, 14);
-        string truncateCity = city.substr(0, 16);
-        string truncateName = name.substr(0, 40);
+        string truncateCity = city.substr(0, 26);
+        string truncateName = name.substr(0, 80);
 
         Data_out << setw(6) << left << truncateCollegeId << ","
                  << setw(14) << left << truncateState << ","
-                 << setw(16) << left << truncateCity << ","
-                 << setw(40) << left << truncateName
+                 << setw(26) << left << truncateCity << ","
+                 << setw(80) << left << truncateName
                  << endl;
 
         return true;
@@ -93,7 +93,7 @@ bool Database::overwriteRecord(string recordNum, string collegeId, string state,
     }
 
     // Calculate the byte offset of the record based on the record number
-    long offset = (stoi(recordNum) - 1) * record_size;
+    long offset = (stoi(recordNum)) * record_size;
 
     // Move to the beginning of the specified record
     Datainout.seekg(0, ios::beg);
@@ -104,6 +104,7 @@ bool Database::overwriteRecord(string recordNum, string collegeId, string state,
     getline(Datainout, line);
 
     // Move back to the beginning of record and using input pointer
+    Datainout.clear();
     Datainout.seekp(offset, ios::beg);
 
     // Update the record with the new fields
@@ -257,17 +258,27 @@ void Database::createDB(string filename)
     Data_in.open(filename + ".csv");
     Data_out.open(filename + ".data", fstream::out);
 
-    getline(Data_in, collegeId, ',');
-    while (!Data_in.eof())
+    if(getline(Data_in, collegeId, ','))
     {
-        readCSV(Data_in, Data_out, collegeId, state, city, name);
-        found_records++;
-    }
+        while (!Data_in.eof())
+        {
+            readCSV(Data_in, Data_out, collegeId, state, city, name);
+            found_records++;
+        }
 
-    Data_in.close();
-    Data_out.close();
-    Config_out.open(filename + ".config", fstream::out);
-    Config_out << found_records << "," << record_size;
+        Data_in.close();
+        Data_out.close();
+        Config_out.open(filename + ".config", fstream::out);
+        Config_out << found_records << "," << record_size;
+        return;
+    }
+    else
+    {
+        cout << "Given file is empty or doens't exist" << endl;
+        Data_in.close();
+        Data_out.close();
+        return;
+    }
 }
 
 bool Database::find(string collegeId, string &recordNum, string &state, string &city, string &name)
@@ -327,7 +338,6 @@ bool Database::deleteRecord(string collegeId)
 void Database::displayRecord(string collegeID)
 {
     string recordNum, state, city, name;
-    cout << "Displaying record..." << endl;
     if(Datainout.is_open())
         if(binarySearch(collegeID, recordNum, state, city, name))
             cout << "Record Number: " << recordNum << " College ID: " << collegeID << " State: " << state << " City: " << city << " Name: " << name << endl; 
@@ -380,17 +390,17 @@ void Database::updateRecord(string collegeId)
             case 1:
                 cout << "Please put new state:" << endl;
                 cin >> newValue;
-                overwriteRecord(collegeId, recordNum, newValue, city, name);
+                overwriteRecord(recordNum, collegeId, newValue, city, name);
                 break;
             case 2:
                 cout << "Please put new city:" << endl;
                 cin >> newValue;
-                overwriteRecord(collegeId, recordNum, state, newValue, name);
+                overwriteRecord(recordNum, collegeId, state, newValue, name);
                 break;
             case 3:
                 cout << "Please put new college name:" << endl;
                 cin >> newValue;
-                overwriteRecord(collegeId, recordNum, state, city, newValue);
+                overwriteRecord(recordNum, collegeId, state, city, newValue);
                 break;
             default:
                 cout << "Incorrect Input" << endl;
@@ -402,102 +412,4 @@ void Database::updateRecord(string collegeId)
         cout << "Couldn't find College Id: " << collegeId << endl;
         return;
     }
-}
-
-//Bonus
-bool Database::addRecord(string collegeID, string state, string city, string name)
-{
-    return false;
-}
-
-bool Database::testDB()
-{
-    // It should create the pair of files from the input file by calling "createDB" followed by "open".
-    // Then, call readRecord on record 0, record 14, record 6, record -1, and record 1000
-    // and print their contents (or an error message) to the screen;
-    try
-    {
-        cout << "Creating database...." << endl;
-        createDB("small-colleges");
-        cout << "Opening database...." << endl;
-        open("small-colleges.data");
-
-        readRecord(0);
-        readRecord(14);
-        readRecord(6);
-        readRecord(-1);
-        readRecord(1000);
-
-        cout << "Closing database...." << endl;
-        close();
-        return true;
-    }
-    catch (const exception &e)
-    {
-        cerr << "An error occurred: " << e.what() << endl;
-        return false;
-    }
-}
-
-bool Database::runLinearSearch()
-{
-    cout << "Creating database...." << endl;
-    createDB("small-colleges");
-    cout << "Opening database...." << endl;
-    open("small-colleges.data");
-
-    string collegeId, state, city, name;
-    string recordNum;
-    cout << "Enter collegeId to search for: ";
-    cin >> collegeId;
-
-    if (linearSearch(collegeId, recordNum, state, city, name))
-    {
-        cout << "Record found: " << collegeId << ", " << state << ", " << city << ", " << name << endl;
-    }
-    else
-    {
-        cout << "Record not found" << endl;
-    }
-
-    cout << "Closing database...." << endl;
-    close();
-    return true;
-}
-
-bool Database::runBinarySearch()
-{
-    cout << "Creating database...." << endl;
-    createDB("small-colleges");
-    cout << "Opening database...." << endl;
-    open("small-colleges.data");
-
-    string collegeId, state, city, name;
-    string recordNum;
-    cout << "Enter collegeId to search for: ";
-    cin >> collegeId;
-
-    if (binarySearch(collegeId, recordNum, state, city, name))
-    {
-        cout << "Record found: " << collegeId << ", " << state << ", " << city << ", " << name << endl;
-    }
-    else
-    {
-        cout << "Record not found" << endl;
-    }
-
-    cout << "Closing database...." << endl;
-    close();
-    return true;
-}
-
-bool Database::runOverwriteRecord()
-{
-    string recordNum = "1";
-    string collegeId = "106397";
-    string state = "chello";
-    string city = "belo";
-    string name = "hello";
-    overwriteRecord(recordNum, collegeId, state, city, name);
-    return true;
 }

@@ -13,19 +13,14 @@ int main() {
     Database DB;
 
     cout << "1) Create new database\n"
-            << "2) Open database\n"
-            << "3) Close database\n"
-            << "4) Display record\n"
-            << "5) Update record\n"
-            << "6) Create report\n"
-            << "7) Add record\n"
-            << "8) Delete record\n"
-            << "9) Quit\n"
-            << "10) Test database\n"
-            << "11) Run linear search\n"
-            << "12) Run binary search\n" 
-            << "13) Run overwrite test" << endl;
-
+        << "2) Open database\n"
+        << "3) Close database\n"
+        << "4) Display record\n"
+        << "5) Update record\n"
+        << "6) Create report\n"
+        << "7) Delete record\n"
+        << "8) Quit"
+        << endl;
     cin >> choice;
     while(!cin.fail())
     {
@@ -57,42 +52,21 @@ int main() {
                 cin >> userInput;
                 DB.updateRecord(userInput);
                 cout << "Updating record..." << endl;
-                
                 break;
             case 6:
                 cout << "Creating report..." << endl;
                 DB.createReport();
                 break;
             case 7:
-                cout << "Adding record..." << endl;
-                break;
-            case 8:
                 cout << "Please put in College ID to delete:" << endl;
                 cin >> userInput;
                 cout << "Deleting record..." << endl;
                 DB.deleteRecord(userInput);
                 break;
-            case 9:
+            case 8:
                 cout << "Quitting..." << endl;
                 exit(0);
                 break;
-            case 10:
-                cout << "Testing database..." << endl;
-                DB.testDB();
-                break;
-            //For testing only, remove later :>
-            case 11:
-                cout << "Running Linear Search..." << endl;
-                DB.runLinearSearch();
-                break;
-            case 12:
-                cout << "Running Binary Search..." << endl;
-                DB.runBinarySearch();
-                break;
-            case 13:
-                cout << "Running overwrite method..." << endl;
-                DB.runOverwriteRecord();
-                break; 
             default:
                 cout << "Invalid choice. Please enter a number between 1 and 9." << endl;
                 break;
@@ -103,13 +77,9 @@ int main() {
             << "4) Display record\n"
             << "5) Update record\n"
             << "6) Create report\n"
-            << "7) Add record\n"
-            << "8) Delete record\n"
-            << "9) Quit\n"
-            << "10) Test database\n"
-            << "11) Run linear search\n"
-            << "12) Run binary search\n" 
-            << "13) Run overwrite test" << endl;
+            << "7) Delete record\n"
+            << "8) Quit"
+            << endl;
         cin >> choice;
     }
     return 0;

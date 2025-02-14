@@ -55,13 +55,4 @@ class Database
         void createReport();
 
         void updateRecord(string collegeId);
-
-        bool testDB();
-
-        bool runLinearSearch();
-
-        bool runBinarySearch();
-
-        bool runOverwriteRecord();
-
 };
