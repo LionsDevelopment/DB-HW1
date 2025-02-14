@@ -50,6 +50,12 @@ class Database
 
         void createDB(string filename);
 
+        void displayRecord(string collegeID);
+
+        void createReport();
+
+        void updateRecord(string collegeId);
+
         bool testDB();
 
         bool runLinearSearch();

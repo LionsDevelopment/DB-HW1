@@ -47,13 +47,21 @@ int main() {
                 DB.close();
                 break;
             case 4:
+                cout << "Please put College ID to display:" << endl;
+                cin >> userInput;
                 cout << "Displaying record..." << endl;
+                DB.displayRecord(userInput);
                 break;
             case 5:
+                cout << "Please put which College Id you want to update:" << endl;
+                cin >> userInput;
+                DB.updateRecord(userInput);
                 cout << "Updating record..." << endl;
+                
                 break;
             case 6:
                 cout << "Creating report..." << endl;
+                DB.createReport();
                 break;
             case 7:
                 cout << "Adding record..." << endl;

@@ -324,6 +324,86 @@ bool Database::deleteRecord(string collegeId)
     return recordDeleted;
 }
 
+void Database::displayRecord(string collegeID)
+{
+    string recordNum, state, city, name;
+    cout << "Displaying record..." << endl;
+    if(Datainout.is_open())
+        if(binarySearch(collegeID, recordNum, state, city, name))
+            cout << "Record Number: " << recordNum << " College ID: " << collegeID << " State: " << state << " City: " << city << " Name: " << name << endl; 
+        else
+            cout << "Couldn't Find ID" << endl;
+    else
+    {
+        cout << "Database could not be found :: \"not open\"" << endl;
+        return;
+    }
+}
+
+void Database::createReport()
+{
+    if(Datainout.is_open())
+    {
+        string line, collegeId, state, city, name;
+        int count = 0;
+        int reportLength = 10;
+        while(count < reportLength)
+        {
+            getRecord(collegeId, state, city, name);
+            cout << "Record Number: " << count << " College ID: " << collegeId << " State: " << state << " City: " << city << " Name: " << name << endl; 
+            count++;
+        }
+        return;
+    }
+    else
+    {
+        cout << "Database could not be found :: \"not open\"" << endl;
+        return;
+    }
+}
+
+void Database::updateRecord(string collegeId)
+{
+    string recordNum, state, city, name;
+    if(binarySearch(collegeId, recordNum, state, city, name))
+    {
+        cout << "Please choose what value to update:\n" 
+            << "1) State\n" 
+            << "2) City\n"
+            << "3) Name\n";
+
+        int choice;
+        string newValue;
+        cin >> choice;
+        switch(choice) 
+        {
+            case 1:
+                cout << "Please put new state:" << endl;
+                cin >> newValue;
+                overwriteRecord(collegeId, recordNum, newValue, city, name);
+                break;
+            case 2:
+                cout << "Please put new city:" << endl;
+                cin >> newValue;
+                overwriteRecord(collegeId, recordNum, state, newValue, name);
+                break;
+            case 3:
+                cout << "Please put new college name:" << endl;
+                cin >> newValue;
+                overwriteRecord(collegeId, recordNum, state, city, newValue);
+                break;
+            default:
+                cout << "Incorrect Input" << endl;
+                break;
+        }
+    }
+    else
+    {
+        cout << "Couldn't find College Id: " << collegeId << endl;
+        return;
+    }
+}
+
 //Bonus
 bool Database::addRecord(string collegeID, string state, string city, string name)
 {
