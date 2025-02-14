@@ -23,7 +23,7 @@ class Database
 
         bool writeRecord(fstream &Data_out, string collegeId, string state, string city, string name);
 
-        bool overwriteRecord(string collegeId, string state, string city, string name);
+        bool overwriteRecord(string recordNum, string collegeId, string state, string city, string name);
 
         bool binarySearch(string collegeId, string &recordNum, string &state, string &city, string &name);
 
@@ -55,5 +55,7 @@ class Database
         bool runLinearSearch();
 
         bool runBinarySearch();
+
+        bool runOverwriteRecord();
 
 };

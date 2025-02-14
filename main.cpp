@@ -9,7 +9,7 @@ using namespace std;
 
 int main() {
     int choice;
-    string filename;
+    string userInput;
     Database DB;
 
     cout << "1) Create new database\n"
@@ -23,7 +23,8 @@ int main() {
             << "9) Quit\n"
             << "10) Test database\n"
             << "11) Run linear search\n"
-            << "12) Run binary search" << endl;
+            << "12) Run binary search\n" 
+            << "13) Run overwrite test" << endl;
 
     cin >> choice;
     while(!cin.fail())
@@ -31,15 +32,15 @@ int main() {
         switch (choice) {
             case 1:
                 cout << "Please put filename:" << endl;
-                cin >> filename;
+                cin >> userInput;
                 cout << "Creating new database..." << endl;
-                DB.createDB(filename);
+                DB.createDB(userInput);
                 break;
             case 2:
                 cout << "Please put filename:" << endl;
-                cin >> filename;
+                cin >> userInput;
                 cout << "Opening database..." << endl;
-                DB.open(filename+".data");
+                DB.open(userInput+".data");
             break;
             case 3:
                 cout << "Closing database..." << endl;
@@ -58,7 +59,10 @@ int main() {
                 cout << "Adding record..." << endl;
                 break;
             case 8:
+                cout << "Please put in College ID to delete:" << endl;
+                cin >> userInput;
                 cout << "Deleting record..." << endl;
+                DB.deleteRecord(userInput);
                 break;
             case 9:
                 cout << "Quitting..." << endl;
@@ -77,6 +81,10 @@ int main() {
                 cout << "Running Binary Search..." << endl;
                 DB.runBinarySearch();
                 break;
+            case 13:
+                cout << "Running overwrite method..." << endl;
+                DB.runOverwriteRecord();
+                break; 
             default:
                 cout << "Invalid choice. Please enter a number between 1 and 9." << endl;
                 break;
@@ -92,7 +100,8 @@ int main() {
             << "9) Quit\n"
             << "10) Test database\n"
             << "11) Run linear search\n"
-            << "12) Run binary search" << endl;
+            << "12) Run binary search\n" 
+            << "13) Run overwrite test" << endl;
         cin >> choice;
     }
     return 0;

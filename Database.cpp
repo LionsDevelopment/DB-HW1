@@ -16,7 +16,7 @@ using namespace std;
 Database::Database()
 {
     num_records = 0;
-    record_size = 76;
+    record_size = 80;
     dataFilePtr = NULL;
     openFlag = false;
 }
@@ -24,13 +24,13 @@ Database::Database()
 Database::~Database() {}
 
 // Private methods
-
 int Database::getRecord(string &collegeId, string &state, string &city, string &name)
 {
     int result = -1;
 
     if (Datainout.peek() == '\n')
         Datainout.get();
+
     getline(Datainout, collegeId, ',');
 
     if (!collegeId.empty())
@@ -50,7 +50,8 @@ int Database::getRecord(string &collegeId, string &state, string &city, string &
     }
 
     return result;
-}
+ }
+
 
 bool Database::writeRecord(fstream &Data_out, string collegeId, string state, string city, string name)
 {
@@ -83,9 +84,31 @@ bool Database::readCSV(ifstream &Data_in, fstream &Data_out, string &collegeId, 
     return true;
 }
 
-bool Database::overwriteRecord(string collegeId, string state, string city, string name)
+bool Database::overwriteRecord(string recordNum, string collegeId, string state, string city, string name)
 {
-    return false;
+
+    if (!Datainout.is_open()) {
+        cout << "Error opening data file" << endl;
+        return false;
+    }
+
+    // Calculate the byte offset of the record based on the record number
+    long offset = (stoi(recordNum) - 1) * record_size;
+
+    // Move to the beginning of the specified record
+    Datainout.seekg(0, ios::beg);
+    Datainout.seekg(offset, ios::beg);
+
+    // Read the line for that record
+    string line;
+    getline(Datainout, line);
+
+    // Move back to the beginning of record and using input pointer
+    Datainout.seekp(offset, ios::beg);
+
+    // Update the record with the new fields
+    writeRecord(Datainout, collegeId, state, city, name);
+    return true;
 }
 
 /*
@@ -98,7 +121,7 @@ bool Database::binarySearch(string collegeId, string &recordNum, string &state, 
 {
     if (Datainout.is_open())
     {
-        cout << "Binary Search" << endl;
+        cout << "Binary Searching..." << endl;
         int low = 0;
         int high = num_records - 1;
         int mid;
@@ -272,12 +295,16 @@ bool Database::find(string collegeId, string &recordNum, string &state, string &
 
 bool Database::deleteRecord(string collegeId)
 {
+    if(!Datainout.is_open()){
+        return false;
+    }
+    
     bool recordDeleted = false;
     string recordNum, state, city, name;
 
     if(find(collegeId, recordNum, state, city, name))
     {
-        if(overwriteRecord(collegeId, " ", " ", " "))
+        if(overwriteRecord(recordNum, collegeId, " ", " ", " "))
         {
             cout << "Record " << recordNum << " was deleted" << endl;
             recordDeleted = true;
@@ -381,5 +408,16 @@ bool Database::runBinarySearch()
 
     cout << "Closing database...." << endl;
     close();
+    return true;
+}
+
+bool Database::runOverwriteRecord()
+{
+    string recordNum = "1";
+    string collegeId = "106397";
+    string state = "chello";
+    string city = "belo";
+    string name = "hello";
+    overwriteRecord(recordNum, collegeId, state, city, name);
     return true;
 }
